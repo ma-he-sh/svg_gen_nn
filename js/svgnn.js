@@ -54,7 +54,7 @@ var jdata = {
         },
         {
             "layername": "nnlayer2",
-            "numnodes": 10
+            "numnodes": 12
         },
         {
             "layername": "nnlayer3",
@@ -66,7 +66,7 @@ var jdata = {
 var numin = jdata.input_l.length;
 var numout = jdata.output_l.length;
 var hidden_layers = jdata.hidden_l;
-//console.log(hidden_layers)
+console.log(hidden_layers)
 
 var top_padd = 22;
 var left_padd= 22;
@@ -85,7 +85,10 @@ function graph_nn(){
     /**validate data*/
     if(numin != 0 && numout != 0 && hidden_layers != 0){
         graph_input();
+        var space = graph_nn_nodes();
+        graph_output(space);
 
+        console.log(position_data)
     }else{
         console.log("Data Insuffiecient");
     }
@@ -131,8 +134,8 @@ function graph_input(){
     svgDoc.appendChild(inputg);
 }
 
-/**graph input nodes**/
-function graph_output(){
+/**graph output nodes**/
+function graph_output(space){
 
     var inputg = document.createElementNS(svgatt, "g");
     inputg.setAttributeNS(null, 'cx', top_padd);
@@ -141,10 +144,10 @@ function graph_output(){
     var y_loc = []
     var y_padding = 0;
 
-    y_padding = ((32*20)/2 - (28*numin)/2);
+    y_padding = ((32*20)/2 - (28*numout)/2);
 
     for(var j = 0; j < numout; j++){
-        var x = top_padd;
+        var x = top_padd+space;
         var y = y_padding + 32*j;
 
         x_loc.push(x);
@@ -160,7 +163,7 @@ function graph_output(){
     }
 
     //append location data to json
-    for(k=0; k < numin; k++){
+    for(k=0; k < numout; k++){
         var loc = {
             "x": x_loc[k],
             "y": y_loc[k]
@@ -169,36 +172,80 @@ function graph_output(){
         position_data.output_loc.push(loc);
     }
     svgDoc.appendChild(inputg);
+}
 
-    console.log(position_data)
+/**graph hidden nodes**/
+function graph_nn_nodes(){
+    var space = 120;
+
+    for(var i=0; i < hidden_layers.length; i++){
+        var newlayer = {
+            "layername": "layer"+i,
+            "data": []
+        }
+        position_data.hidden_loc.push(newlayer);
+        nn_nodes(space, jdata.hidden_l[i].numnodes, i);
+        space += 120;
+    }
+
+    //return space
+    return space;
 }
 
 
-graph_nn()
+function nn_nodes(space, numnodes, index){
+    var inputg = document.createElementNS(svgatt, "g");
+    inputg.setAttributeNS(null, 'cx', top_padd);
 
+    var x_loc = []
+    var y_loc = []
+    var y_padding = 0;
 
+    y_padding = ((32*20)/2 - (28*numnodes)/2);
 
+    for(var j = 0; j < numnodes; j++){
+        var x = top_padd+space;
+        var y = y_padding + 32*j;
 
+        x_loc.push(x);
+        y_loc.push(y);
 
+        var circle = document.createElementNS(svgatt, 'circle');
+        circle.setAttributeNS(null, 'cx', x);
+        circle.setAttributeNS(null, 'cy', y);
+        circle.setAttributeNS(null, 'r', 14);
+        circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 2px;');
 
-// function createLineG(nodes){
+        inputg.appendChild(circle);
+    }
 
-//     var group = document.createElementNS(svgatt, "g");
+    //append location data to json
+    for(k=0; k < numnodes; k++){
+        var loc = {
+            "x": x_loc[k],
+            "y": y_loc[k]
+        }
 
-//     for(i=0; i<nodes; i++){
-//         /**CREATE LINE */
-//         var line = document.createElementNS(svgatt, "line");
-//         line.setAttributeNS(null, 'x1', 35);
-//         line.setAttributeNS(null, 'x2', 106);
-//         line.setAttributeNS(null, 'y1', 20);
-//         line.setAttributeNS(null, 'y2', 20);
-//         line.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+        position_data.hidden_loc[index].data.push(loc);
+    }
+    svgDoc.appendChild(inputg);
+}
 
-//         group.appendChild(line);
-//     }
-//     svgDoc.appendChild(group);
-// }
+function join_nodes(){
+    var group = document.createElementNS(svgatt, "g");
 
+    for(i=0; i<nodes; i++){
+        /**CREATE LINE */
+        var line = document.createElementNS(svgatt, "line");
+        line.setAttributeNS(null, 'x1', 35);
+        line.setAttributeNS(null, 'x2', 106);
+        line.setAttributeNS(null, 'y1', 20);
+        line.setAttributeNS(null, 'y2', 20);
+        line.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
 
-// createNodesG(22, 20);
-// createNodesG(120, 8);
+        group.appendChild(line);
+    }
+    svgDoc.appendChild(group);
+}
+
+graph_nn();
