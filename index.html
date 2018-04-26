@@ -4,28 +4,35 @@
 
 <body>
     <div class="app-content">
+        <button onclick="render_Graph();">Graph</button>
         <div id="content"></div>
 
         <div id="settings">
+            <!--num input nodes-->
             <div class="section">
-                <label for="numHiddenL">Number of hidden Layers:</label>
-                <input type="text" name="numHiddenL" />
+                <label for="numHiddenL">Number of inputs: <div id="numInput" class="fl_right">0</div></label>
+                <div class="section">
+                    <input type="range" min="0" max="20" value="0" oninput="slider_inputs(this.value);">
+                </div>
             </div>
 
+            <!--num output nodes-->
             <div class="section">
-                <label for="numOutputs">Number of Output Layers:</label>
-                <input type="text" name="numOutputs" />
+                <label for="numHiddenL">Number of outputs: <div id="numOutput" class="fl_right">0</div></label>
+                <div class="section">
+                    <input type="range" min="0" max="20" value="0" oninput="slider_outputs(this.value);">
+                </div>
             </div>
 
+            <!--num hidden layers-->
             <div class="section">
-                <label for="numInputs">Number of inputs:</label>
-                <input type="text" name="numInputs" />
+                <label for="numHiddenL">Number of hidden Layers: <div id="numHidden" class="fl_right">2</div></label>
+                <div class="section">
+                    <input type="range" min="0" max="20" value="0" oninput="slider_hidden(this.value);">
+                </div>
             </div>
 
-            <div class="section">
-                <label for="labelName1">Label layer:</label>
-                <input type="text" name="labelName1" />
-            </div>
+            <div class="section" id="hidden_layers"></div>
         </div>
     </div>
 </body>

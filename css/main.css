@@ -173,11 +173,16 @@ a {
 
 #content{
     width: 100%;
-    height: 600px;
+    height: 700px;
     float: left;
     padding: 10px;
+    border-radius: 6px;
     box-sizing: border-box;
     background-color: #DFEEFF !important;
+}
+
+#svgDoc{
+    height: 100%;
 }
 
 #settings{
@@ -214,6 +219,14 @@ a {
     font-weight: 600;
 }
 
+.fl_right{
+    float: right;
+}
+
+.fl_left{
+    float: left;
+}
+
 /**STYLE inputs**/
 input[type="text"]{
     width: 100%;
@@ -222,4 +235,41 @@ input[type="text"]{
     border: 2px solid #0070FF;
     border-radius: 2.5px;
     text-indent: 10px;
+}
+
+input[type="range"]{
+    width: 100%;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+
+    height: 4px;
+    float: left;
+    -webkit-appearance: none;
+    background: #E0EFFE;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #0070FF;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    box-sizing: border-box;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #0070FF;
+    cursor: pointer;
 }

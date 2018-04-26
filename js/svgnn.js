@@ -8,68 +8,54 @@ svg.setAttributeNS(null, "height", "100%");
 svg.setAttributeNS(null, "width", "100%");
 svg.setAttributeNS(null, "style", "float:left;");
 
-document.getElementById('content').appendChild(svg);
+var svgContent = document.getElementById('content').appendChild(svg);
 var svgDoc = document.getElementById('svgDoc');
 
 
 /**SAMPLE json**/
+// var jdata = {
+//     "input_l": [
+//         {
+//             "inname": "X1"
+//         },
+//         {
+//             "inname": "X2"
+//         },
+//         {
+//             "inname": "X3"
+//         }],
+//     "output_l": [
+//         {
+//             "outname": "Y1"
+//         },
+//         {
+//             "outname": "Y2"
+//         }
+//     ],
+//     "hidden_l": [
+//         {
+//             "layername": "nnlayer1",
+//             "numnodes": 10
+//         },
+//         {
+//             "layername": "nnlayer2",
+//             "numnodes": 12
+//         },
+//         {
+//             "layername": "nnlayer3",
+//             "numnodes": 10
+//         }
+//     ]
+// }
 var jdata = {
-    "input_l": [
-        {
-            "inname": "X1"
-        },
-        {
-            "inname": "X2"
-        },
-        {
-            "inname": "X3"
-        },
-        {
-            "inname": "X5"
-        },
-        {
-            "inname": "X6"
-        },
-        {
-            "inname": "X4"
-        },
-        {
-            "inname": "X5"
-        },
-        {
-            "inname": "X6"
-        }],
-    "output_l": [
-        {
-            "outname": "Y1"
-        },
-        {
-            "outname": "Y2"
-        }
-    ],
-    "hidden_l": [
-        {
-            "layername": "nnlayer1",
-            "numnodes": 10
-        },
-        {
-            "layername": "nnlayer2",
-            "numnodes": 12
-        },
-        {
-            "layername": "nnlayer3",
-            "numnodes": 10
-        },
-        {
-            "layername": "nnlayer3",
-            "numnodes": 20
-        }
-    ]
+    "input_l": [],
+    "output_l": [],
+    "hidden_l": []
 }
 
-var numin = jdata.input_l.length;
-var numout = jdata.output_l.length;
-var hidden_layers = jdata.hidden_l;
+var numin = 0;
+var numout = 0;
+var hidden_layers = 0;
 
 var top_padd = 22;
 var left_padd = 22;
@@ -82,6 +68,9 @@ var position_data = {
 
 /**generate postions for the nodes*/
 function graph_nn() {
+    numin = jdata.input_l.length;
+    numout = jdata.output_l.length;
+    hidden_layers = jdata.hidden_l;
 
     /**validate data*/
     if (numin != 0 && numout != 0 && hidden_layers != 0) {
@@ -95,7 +84,7 @@ function graph_nn() {
 
         console.log(position_data)
     } else {
-        console.log("Data Insuffiecient");
+        console.log("Data Insufficient");
     }
 }
 
@@ -269,4 +258,92 @@ function draw_circles(x, y, type) {
     return circle;
 }
 
-graph_nn();
+
+/**Collect data */
+var input_ly = 0;
+var output_ly = 0;
+var hidden_ly = 0;
+
+function slider_inputs(val){
+    document.getElementById("numInput").innerHTML = val;
+    input_ly = val;
+    update_graph_data();
+}
+
+function slider_outputs(val){
+    document.getElementById("numOutput").innerHTML = val;
+    output_ly = val;
+    update_graph_data();
+}
+
+function slider_hidden(val){
+    document.getElementById("numHidden").innerHTML = val;
+    hidden_ly = val;
+    generate_sliders(val);
+    update_graph_data();
+}
+
+function slider_nn(item, idname, index){
+    console.log(item.value, item.id, index);
+    jdata.hidden_l[index].numnodes = parseInt(item.value);
+}
+
+function update_graph_data(){
+    svgContent.innerHTML = "";
+    jdata.input_l = [];
+    jdata.output_l= [];
+    jdata.hidden_l= [];
+
+    for(var i=0; i < input_ly; i++){
+        var layers = {
+            "inname": "input"+i
+        }
+
+        jdata.input_l.push(layers);
+    }
+
+    for(var j=0; j < output_ly; j++){
+        var layers = {
+            "outname": "output"+j
+        }
+
+        jdata.output_l.push(layers);
+    }
+
+    for(var k=0; k < hidden_ly; k++){
+        var layers = {
+            "layername": "nnlayer"+k,
+            "numnodes": 0
+        }
+
+        jdata.hidden_l.push(layers);
+    }
+
+    console.log(jdata);
+}
+
+function generate_sliders(val){
+    var section = document.getElementById("hidden_layers");
+    section.innerHTML = "";
+
+    for(var i=0; i < val; i++){
+
+        var idname = "nn_layer"+i;
+
+        var slider = document.createElement("INPUT");
+        slider.setAttribute("type", "range");
+        slider.setAttribute("min", 1);
+        slider.setAttribute("max", 20);
+        slider.setAttribute("value", 2);
+        slider.setAttribute("id", idname);
+        slider.setAttribute("oninput", "slider_nn(this, "+idname+","+i+")");
+
+        section.appendChild(slider);
+    }
+}
+
+function render_Graph(){
+    svgContent.innerHTML = "";
+    //graph the nn
+    graph_nn();
+}
