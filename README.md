@@ -8,6 +8,8 @@ This is a simple NN Architecture diagram generator. Simply set you desired numbe
 * Allow to define weights
 * Remove layer restrictions
 
+![alt text](https://github.com/Mahesh-Ranaweera/svg_gen_nn/blob/master/assets/preview1.png)
+![alt text](https://github.com/Mahesh-Ranaweera/svg_gen_nn/blob/master/assets/preview2.png)
 
 ### To run simply open index.html or
 ```
