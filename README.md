@@ -5,6 +5,8 @@ This is a simple NN Architecture diagram generator. Simply set you desired numbe
 ### Future Improvements:
 * Allow SVG download
 * Add labels
+* Allow to define weights
+* Remove layer restrictions
 
 
 ### To run simply open index.html or
