@@ -6,7 +6,7 @@ svg.setAttributeNS(null, "id", "svgDoc");
 //svg.setAttributeNS(null, "viewBox", "");
 svg.setAttributeNS(null, "height", "100%");
 svg.setAttributeNS(null, "width", "100%");
-svg.setAttributeNS(null, "style", "float:left;");
+svg.setAttributeNS(null, "style", "float:left; display:none;");
 
 var svgContent = document.getElementById('content').appendChild(svg);
 var svgDoc = document.getElementById('svgDoc');
@@ -307,14 +307,14 @@ function generate_sliders(val){
         var outputlb = document.createElement("DIV");
         outputlb.setAttribute("id", "label_nn"+i);
         outputlb.setAttribute("class", "fl_right");
-        outputlb.innerHTML = "2";
+        outputlb.innerHTML = "0";
         div.appendChild(outputlb);
 
         var slider = document.createElement("INPUT");
         slider.setAttribute("type", "range");
-        slider.setAttribute("min", 1);
+        slider.setAttribute("min", 0);
         slider.setAttribute("max", 20);
-        slider.setAttribute("value", 2);
+        slider.setAttribute("value", 0);
         slider.setAttribute("id", idname);
         slider.setAttribute("name", idname);
         slider.setAttribute("oninput", "slider_nn(this, "+idname+","+i+")");
@@ -327,6 +327,27 @@ function generate_sliders(val){
 function render_Graph(){
     //graph the nn
     graph_nn();
+
+    var width = document.getElementById('content').offsetWidth;
+    var height= document.getElementById('content').offsetHeight;
+    console.log(width, height);
+
+    var svgString = new XMLSerializer().serializeToString(document.querySelector('svg'));
+
+    var canvas = document.getElementById("canvas");
+    canvas.width = width;
+    canvas.height= height;
+    var ctx = canvas.getContext("2d");
+    var DOMURL = self.URL || self.webkitURL || self;
+    var img = new Image();
+    var svg = new Blob([svgString], {type: "image/svg+xml;charset=utf-8"});
+    var url = DOMURL.createObjectURL(svg);
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0);
+        var png = canvas.toDataURL("image/png");
+        DOMURL.revokeObjectURL(png);
+    };
+    img.src = url;
 }
 
 function clear_Graph(){

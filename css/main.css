@@ -219,6 +219,10 @@ a {
     font-weight: 600;
 }
 
+canvas{
+    float: left;
+}
+
 .fl_right{
     float: right;
 }
