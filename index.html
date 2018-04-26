@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="css/main.css">
-
+<head>
+    <title>NN architecture gen</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
 <body>
     <div class="app-content">
-        <button onclick="render_Graph();">Graph</button>
         <div id="content"></div>
 
         <div id="settings">
@@ -26,13 +27,20 @@
 
             <!--num hidden layers-->
             <div class="section">
-                <label for="numHiddenL">Number of hidden Layers: <div id="numHidden" class="fl_right">2</div></label>
+                <label for="numHiddenL">Number of hidden Layers: <div id="numHidden" class="fl_right">0</div></label>
                 <div class="section">
                     <input type="range" min="0" max="20" value="0" oninput="slider_hidden(this.value);">
                 </div>
             </div>
 
             <div class="section" id="hidden_layers"></div>
+
+            <hr>
+
+            <div class="section">
+                <button class="button_nn fl_right" onclick="render_Graph();">Graph</button>
+                <button class="button_nn fl_right" onclick="clear_Graph();">Clear</button>
+            </div>
         </div>
     </div>
 </body>

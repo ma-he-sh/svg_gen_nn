@@ -199,7 +199,7 @@ a {
     width: 100%;
     position: absolute;
     background-color: transparent;
-    margin: 64px auto 64px auto;
+    margin: 12px auto 64px auto;
     box-sizing: border-box;
     padding: 5px;
     left: 0;
@@ -225,6 +225,10 @@ a {
 
 .fl_left{
     float: left;
+}
+
+hr{
+    border: 1px solid #DFEEFF;
 }
 
 /**STYLE inputs**/
@@ -273,3 +277,19 @@ input[type="range"]::-moz-range-thumb {
     border: 2px solid #0070FF;
     cursor: pointer;
 }
+
+.button_nn{
+    width: 120px;
+    height: 48px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    border: 2px solid #0070FF;
+    border-radius: 2.5px;
+    line-height: 48px;
+    font-weight: 600;
+    outline-style: none;
+    background-color: #E0EFFE;
+    cursor: pointer;
+}
+

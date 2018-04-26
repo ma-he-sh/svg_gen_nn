@@ -11,42 +11,6 @@ svg.setAttributeNS(null, "style", "float:left;");
 var svgContent = document.getElementById('content').appendChild(svg);
 var svgDoc = document.getElementById('svgDoc');
 
-
-/**SAMPLE json**/
-// var jdata = {
-//     "input_l": [
-//         {
-//             "inname": "X1"
-//         },
-//         {
-//             "inname": "X2"
-//         },
-//         {
-//             "inname": "X3"
-//         }],
-//     "output_l": [
-//         {
-//             "outname": "Y1"
-//         },
-//         {
-//             "outname": "Y2"
-//         }
-//     ],
-//     "hidden_l": [
-//         {
-//             "layername": "nnlayer1",
-//             "numnodes": 10
-//         },
-//         {
-//             "layername": "nnlayer2",
-//             "numnodes": 12
-//         },
-//         {
-//             "layername": "nnlayer3",
-//             "numnodes": 10
-//         }
-//     ]
-// }
 var jdata = {
     "input_l": [],
     "output_l": [],
@@ -85,6 +49,7 @@ function graph_nn() {
         console.log(position_data)
     } else {
         console.log("Data Insufficient");
+        alert("Data Insufficient");
     }
 }
 
@@ -233,7 +198,7 @@ function draw_lines(index1, index2) {
             line.setAttributeNS(null, 'x2', data2[layer2].x - 14);
             line.setAttributeNS(null, 'y1', data1[layer1].y);
             line.setAttributeNS(null, 'y2', data2[layer2].y);
-            line.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;');
+            line.setAttributeNS(null, 'style', 'fill: none; stroke: black; stroke-width: 1px;');
             group.appendChild(line);
         }
     }
@@ -247,13 +212,13 @@ function draw_circles(x, y, type) {
     circle.setAttributeNS(null, 'r', 14);
 
     if (type == "input")
-        circle.setAttributeNS(null, 'style', 'fill: none; stroke: red; stroke-width: 2px;');
+        circle.setAttributeNS(null, 'style', 'fill: #fbde7a; stroke: #F3D351; stroke-width: 2px;');
 
     if (type == "output")
-        circle.setAttributeNS(null, 'style', 'fill: none; stroke: green; stroke-width: 2px;');
+        circle.setAttributeNS(null, 'style', 'fill: #de666f; stroke: #EB4E36; stroke-width: 2px;');
 
     if (type == "nn")
-        circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 2px;');
+        circle.setAttributeNS(null, 'style', 'fill: #2196f3; stroke: #0D8AE; stroke-width: 2px;');
 
     return circle;
 }
@@ -284,7 +249,8 @@ function slider_hidden(val){
 }
 
 function slider_nn(item, idname, index){
-    console.log(item.value, item.id, index);
+    //console.log(item.value, item.id, index);
+    document.getElementById("label_nn"+index).innerHTML = item.value;
     jdata.hidden_l[index].numnodes = parseInt(item.value);
 }
 
@@ -319,7 +285,7 @@ function update_graph_data(){
         jdata.hidden_l.push(layers);
     }
 
-    console.log(jdata);
+    //console.log(jdata);
 }
 
 function generate_sliders(val){
@@ -330,20 +296,39 @@ function generate_sliders(val){
 
         var idname = "nn_layer"+i;
 
+        var div = document.createElement("DIV");
+        div.setAttribute("class", "section");
+
+        var label = document.createElement("LABEL");
+        label.setAttribute("for", idname);
+        label.innerHTML = "Hidden Layer" + i + ":";
+        div.appendChild(label);
+
+        var outputlb = document.createElement("DIV");
+        outputlb.setAttribute("id", "label_nn"+i);
+        outputlb.setAttribute("class", "fl_right");
+        outputlb.innerHTML = "2";
+        div.appendChild(outputlb);
+
         var slider = document.createElement("INPUT");
         slider.setAttribute("type", "range");
         slider.setAttribute("min", 1);
         slider.setAttribute("max", 20);
         slider.setAttribute("value", 2);
         slider.setAttribute("id", idname);
+        slider.setAttribute("name", idname);
         slider.setAttribute("oninput", "slider_nn(this, "+idname+","+i+")");
+        div.appendChild(slider);
 
-        section.appendChild(slider);
+        section.appendChild(div);
     }
 }
 
 function render_Graph(){
-    svgContent.innerHTML = "";
     //graph the nn
     graph_nn();
+}
+
+function clear_Graph(){
+    location.reload();
 }
