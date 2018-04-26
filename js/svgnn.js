@@ -66,7 +66,6 @@ var jdata = {
 var numin = jdata.input_l.length;
 var numout = jdata.output_l.length;
 var hidden_layers = jdata.hidden_l;
-console.log(hidden_layers)
 
 var top_padd = 22;
 var left_padd= 22;
@@ -74,9 +73,7 @@ var left_padd= 22;
 
 /**store location of layer nodes**/
 var position_data = {
-    "input_loc": [],
-    "output_loc": [],
-    "hidden_loc": []
+    "loc_data": []
 }
 
 /**generate postions for the nodes*/
@@ -84,9 +81,13 @@ function graph_nn(){
 
     /**validate data*/
     if(numin != 0 && numout != 0 && hidden_layers != 0){
+        //draw nodes
         graph_input();
         var space = graph_nn_nodes();
         graph_output(space);
+        
+        //draw lines between nodes
+        join_nodes();
 
         console.log(position_data)
     }else{
@@ -122,14 +123,20 @@ function graph_input(){
         inputg.appendChild(circle);
     }
 
+    //add data to layer
+    var newlayer = {
+        "layername": "input_layer",
+        "data": []
+    }
+    position_data.loc_data.push(newlayer);
+
     //append location data to json
     for(k=0; k < numin; k++){
         var loc = {
             "x": x_loc[k],
             "y": y_loc[k]
         }
-
-        position_data.input_loc.push(loc);
+        position_data.loc_data[0].data.push(loc);
     }
     svgDoc.appendChild(inputg);
 }
@@ -162,14 +169,21 @@ function graph_output(space){
         inputg.appendChild(circle);
     }
 
+    //add data to layer
+    var newlayer = {
+        "layername": "output_layer",
+        "data": []
+    }
+    position_data.loc_data.push(newlayer);
+    var putput_index = position_data.loc_data.length - 1;
+
     //append location data to json
     for(k=0; k < numout; k++){
         var loc = {
             "x": x_loc[k],
             "y": y_loc[k]
         }
-
-        position_data.output_loc.push(loc);
+        position_data.loc_data[putput_index].data.push(loc);
     }
     svgDoc.appendChild(inputg);
 }
@@ -180,11 +194,11 @@ function graph_nn_nodes(){
 
     for(var i=0; i < hidden_layers.length; i++){
         var newlayer = {
-            "layername": "layer"+i,
+            "layername": "layer"+(i+1),
             "data": []
         }
-        position_data.hidden_loc.push(newlayer);
-        nn_nodes(space, jdata.hidden_l[i].numnodes, i);
+        position_data.loc_data.push(newlayer);
+        nn_nodes(space, jdata.hidden_l[i].numnodes, i+1);
         space += 120;
     }
 
@@ -226,24 +240,49 @@ function nn_nodes(space, numnodes, index){
             "y": y_loc[k]
         }
 
-        position_data.hidden_loc[index].data.push(loc);
+        //position_data.hidden_loc[index].data.push(loc);
+        position_data.loc_data[index].data.push(loc);
     }
     svgDoc.appendChild(inputg);
 }
 
 function join_nodes(){
+
+    var index1, index2 = 0
+
+    //iterate through layers
+    for(var layer = 0; layer < position_data.loc_data.length; layer++){
+        if (layer != position_data.loc_data.length - 1){
+            //console.log(position_data.loc_data[layer].data);
+            index1 = layer;
+            index2 = layer + 1;
+
+            console.log("doing it", index1, index2)
+            draw_lines(index1, index2);
+        }   
+    }
+}
+
+function draw_lines(index1, index2){
+
+    var data1 = position_data.loc_data[index1].data;
+    var data2 = position_data.loc_data[index2].data;
+
+    //layer1
     var group = document.createElementNS(svgatt, "g");
+    for(var layer1 = 0; layer1 < data1.length; layer1++){
+        //layer2
+        for (var layer2 = 0; layer2 < data2.length; layer2++){
+            console.log(data1[layer1].x, data1[layer1].y, data2[layer2].x, data2[layer2].y)
 
-    for(i=0; i<nodes; i++){
-        /**CREATE LINE */
-        var line = document.createElementNS(svgatt, "line");
-        line.setAttributeNS(null, 'x1', 35);
-        line.setAttributeNS(null, 'x2', 106);
-        line.setAttributeNS(null, 'y1', 20);
-        line.setAttributeNS(null, 'y2', 20);
-        line.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
-
-        group.appendChild(line);
+            var line = document.createElementNS(svgatt, "line");
+            line.setAttributeNS(null, 'x1', data1[layer1].x + 14);
+            line.setAttributeNS(null, 'x2', data2[layer2].x - 14);
+            line.setAttributeNS(null, 'y1', data1[layer1].y);
+            line.setAttributeNS(null, 'y2', data2[layer2].y);
+            line.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+            group.appendChild(line);
+        }
     }
     svgDoc.appendChild(group);
 }
